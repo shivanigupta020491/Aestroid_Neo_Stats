@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initInstance();
-        setListener();
+        setListeners();
     }
 
     private void initView() {
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void setListener() {
+    private void setListeners() {
 
         startDateLayout.setOnClickListener(this);
         endDateLayout.setOnClickListener(this);

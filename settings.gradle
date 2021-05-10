@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "Aestroid Neo Stats"

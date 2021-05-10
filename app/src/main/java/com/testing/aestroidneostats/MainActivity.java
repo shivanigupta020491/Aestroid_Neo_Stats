@@ -107,13 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar calendarStart = Calendar.getInstance();
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd MMMM yyyy");
          currentDate = sdfDate.format(calendarStart.getTime());
-        //calendarStart.add(Calendar.DAY_OF_YEAR, + 6);
-       // String afterDate = sdfDate.format(calendarStart.getTime());
         startDateText.setText(currentDate);
         endDateText.setText(currentDate);
-//        startDateText.setHint(currentDate);
-//        endDateText.setHint(currentDate);
-
 
         //for system navigation bar color #E58221
         getWindow().setNavigationBarColor(Color.parseColor("#ff8256"));
@@ -154,15 +149,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.submitBtn: {
                 if (isValid()) {
-//                    if (showAestroidDetailLayout.getVisibility() == View.VISIBLE && mpLineChart){
-//                        mpLineChart.clearValues();
-//                        mpLineChart.notifyDataSetChanged();
-//                    }else{
-//
-//                    }
                     hitApi();
                 }
-                // showAestroidDetailLayout.setVisibility(View.VISIBLE);
+
                 break;
 
             }
@@ -213,14 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             long diff = calculateDays(startDateText.getText().toString(), date);
                             if (diff > 8) {
-                                //endDateText.setText("");
                                 endDateText.setHint(currentDate);
-
                                 Toast.makeText(MainActivity.this, "Feed date limit is only 7 Days", Toast.LENGTH_LONG).show();
 
                             } else if (diff < 0) {
                                 Toast.makeText(MainActivity.this, "End date should be after start date ", Toast.LENGTH_LONG).show();
-                               // endDateText.setText("");
                                 endDateText.setHint(currentDate);
 
                             } else {
@@ -262,34 +248,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final String AESTROID_API = "https://api.nasa.gov/neo/rest/v1/feed?start_date=" + startDate + "&end_date=" + endDate + "&api_key=Ks2sRwIMvhh1r6bNYQSdUP7OR42zyioL4WP0eup4";
 
-      //  System.out.println("<<<<<<<<<<<<<<<<<< AESTROID_API API  " + AESTROID_API);
-
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AESTROID_API, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-               // System.out.println("<<<<<<<<<<<<<<<<<< AESTROID_API API response " + response);
                 try {
-
-//                    lineData.notifyDataChanged();
-//                    mpLineChart.notifyDataSetChanged();
 
                     progressDialog.dismiss();
                     submitButton.setEnabled(true);
 
                     JSONObject jsonObject = new JSONObject(response);
                     elementCount = jsonObject.getInt("element_count");
-                    JSONObject near_earth_objects = jsonObject.getJSONObject("near_earth_objects"); // status
-                   // System.out.println("<<<<<<<<<<<<<<<<<< near_earth_objects API length" + near_earth_objects.length() + " " + elementCount);
+                    JSONObject near_earth_objects = jsonObject.getJSONObject("near_earth_objects");
 
                     dateArrayList = funForSetDate();
-
-                  //  System.out.println("<<<<<<<<<<<<<<<<<< AESTROID_API API dateArrayList " + dateArrayList);
-
                     for (int i = 0; i < near_earth_objects.length(); i++) {
 
                         JSONArray dateArray = near_earth_objects.getJSONArray(dateArrayList.get(i));
-                       // System.out.println("<<<<<<<<<<<<<<<<<< near_earth_objects dateArray length" + dateArray.length());
-
                         graphObjectList.add(new GraphPojo(dateArrayList.get(i), dateArray.length()));
 
                         drawLineChart();
@@ -305,8 +279,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             double average = (diameterMin + diameterMax) / 2;
 
                             totalAestroidLength = totalAestroidLength + average;
-
-                          //  System.out.println("<<<<<<<<<<<<<<<<<<  API value" + id + " " + diameterMax + " " + diameterMin + " " + average);
 
                             JSONArray close_approach_data = dateArray.getJSONObject(j).getJSONArray("close_approach_data");
                             JSONObject relative_velocity = close_approach_data.getJSONObject(0).getJSONObject("relative_velocity");
@@ -331,8 +303,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             closestIdText.setText(dataPojo2.getId());
                             closestSpeedText.setText(dataPojo2.getClosestDistance() + " km");
 
-
-                           //System.out.println("<<<<<<<<<<<<<<<<<<  API value kilometers_per_hour " + dataPojo2.getId() + " " + dataPojo2.getClosestDistance() + " " + dataPojo1.getId() + " " + dataPojo1.getSpeed());
                         }
 
                     }
@@ -345,17 +315,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         averageSizeText.setText(averageAestroidLenght + " km");
                     }
                     showAestroidDetailLayout.setVisibility(View.VISIBLE);
-                  //  System.out.println("<<<<<<<<<<<<<<<<<<  average Aestroid Lenght " + averageAestroidLenght);
 
 
                 } catch (Exception e) {
-//                    progressBar.setVisibility(View.GONE);
-//                    nextBtn.setVisibility(View.VISIBLE);
                     showAlertDialog("Volley Exception", e.toString());
                     progressDialog.dismiss();
                     submitButton.setEnabled(true);
                     e.printStackTrace();
-                  //  System.out.println(">>>>>>> AESTROID_API error " + e.toString());
 
                 }
 
@@ -382,17 +348,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LineData lineData = new LineData(lineDataset1);
 
         if (mpLineChart.getLineData() != null) {
-            // mpLineChart.clearValues();
-            //  mpLineChart.invalidate();
             mpLineChart.getLineData().clearValues();
-         //   System.out.println(">>>>>>>>>> mpLineChart " + mpLineChart.getData());
-            //mpLineChart.notifyDataSetChanged();
         }
 
         XAxis xAxis = mpLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(8);
-//                        xAxis.setTextColor(Color.parseColor("#03A9F4"));
 
         // for hide x asix grip
         xAxis.setDrawGridLines(false);
@@ -462,7 +423,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             Date currentDate = dateFormat.parse(dateString);
             String date = sdf.format(currentDate);
-          //  System.out.println("<<<<<<<<<<<<<<<<<<  average Aestroid convertDate " + date);
 
             return date;
 
@@ -497,7 +457,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String startDate = startDateText.getText().toString();
         String endDate = endDateText.getText().toString();
         long diff = calculateDays(startDate,endDate);
-      //  System.out.println(">>>>>>> diff between date " + diff);
 
         SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMMM yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -509,7 +468,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Date dateSelectedFrom = sdf1.parse(startDate);
                 nextCurrentDate = sdf2.format(dateSelectedFrom.getTime() + (MILLIS_IN_DAY) * i);
 
-               // System.out.println(">>>>>>> diff between finalDate " +  nextCurrentDate) ;
                 dateTypeList.add(nextCurrentDate);
 
             }
